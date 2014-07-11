@@ -8,5 +8,6 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 80F70E11F0
 
 RUN gem install kontejner --no-rdoc --no-ri
 
+EXPOSE 53
 ENTRYPOINT ["kontejner"]
 CMD ["start"]
