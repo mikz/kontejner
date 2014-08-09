@@ -8,28 +8,41 @@ module Kontejner
     IN = Resolv::DNS::Resource::IN
 
     def initialize(domain:,docker:,ttl:)
+      @dns = RubyDNS::RuleBasedServer.new
+
+      @logger = @dns.logger
+      @logger.level = Logger::DEBUG
+
+      @matcher = /(?<subdomain>[^.]+)\.#{domain}$/
+      @ttl = ttl
+
       @upstream = RubyDNS::Resolver.new(GOOGLE_SERVERS)
       @docker = Kontejner::Resolver.new(docker: docker)
 
-      @dns = RubyDNS::RuleBasedServer.new
-      @dns.logger.level = Logger::INFO
+      @logger.info("Docker Connection #{docker}")
+    end
 
-      @dns.match(/(?<subdomain>[^.]+)\.#{domain}$/, IN::A) do |t, match|
+    def start(**options)
+      @logger.debug("Matching #{@matcher}")
+
+      @dns.match(@matcher, IN::A) do |t, match|
         ip = @docker.resolve(match[:subdomain])
 
         if ip
-          t.respond!(ip, ttl: ttl)
+          t.respond!(ip, ttl: @ttl)
         else
-          t.fail! :NoError
+          t.fail! :NXDomain
         end
       end
 
       @dns.otherwise do |q|
         q.passthrough!(@upstream)
       end
+
+      run(options)
     end
 
-    def start(**options)
+    def run(options)
       EventMachine.run do
         trap("INT") do
           EventMachine.stop
