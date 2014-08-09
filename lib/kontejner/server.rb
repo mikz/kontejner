@@ -3,7 +3,7 @@ require 'kontejner/resolver'
 
 module Kontejner
   class Server
-    GOOGLE_SERVERS = [ [:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53], [:udp, '8.8.4.4', 53], [:udp, '8.8.4.4', 53] ]
+    GOOGLE_SERVERS = [ [:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53], [:udp, '8.8.4.4', 53], [:tcp, '8.8.4.4', 53] ]
 
     IN = Resolv::DNS::Resource::IN
 
