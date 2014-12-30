@@ -15,6 +15,17 @@ kontejner start --domain=docker --port=7079 --docker=$DOCKER_HOST
 
 ## Usage
 
+```shell
+docker run --detach  --volume /var/run/docker.sock:/var/run/docker.sock -p 172.17.42.1:53:53/udp -p 172.17.42.1:53:53/tcp mikz/kontejner start --domain docker
+```
+and use 172.17.42.1 as your dns server
+
+```shell
+dig @172.17.42.1 raging_torvalds.docker
+```
+
+## TODO
+
 * Use EventMachine http client rather than blocking excon in Docker Api
 
 ## Contributing
