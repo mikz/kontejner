@@ -16,7 +16,7 @@ kontejner start --domain=docker --port=7079 --docker=$DOCKER_HOST
 ## Usage
 
 ```shell
-docker run --detach  --volume /var/run/docker.sock:/var/run/docker.sock -p 172.17.42.1:53:53/udp -p 172.17.42.1:53:53/tcp mikz/kontejner start --domain docker
+docker run --detach --name kontejner --restart=on-failure --volume /var/run/docker.sock:/var/run/docker.sock -p 172.17.42.1:53:53/udp -p 172.17.42.1:53:53/tcp mikz/kontejner start --domain docker
 ```
 and use 172.17.42.1 as your dns server
 
